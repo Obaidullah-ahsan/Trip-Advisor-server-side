@@ -39,6 +39,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/packages/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await packagesCollection.find(query).toArray();
+      res.send(result);
+    });
+
     app.get("/categoryBasePackages/:category", async (req, res) => {
       const category = req.params.category;
       const query = { tour_type: category };
