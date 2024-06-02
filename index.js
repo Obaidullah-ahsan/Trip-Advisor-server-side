@@ -39,6 +39,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/categoryBasePackages/:category", async (req, res) => {
+      const category = req.params.category;
+      const query = { tour_type: category };
+      const result = await packagesCollection.find(query).toArray();
+      res.send(result);
+    });
+
     // guides related api
     app.get("/guides", async (req, res) => {
       const result = await guidesCollection.find().toArray();
