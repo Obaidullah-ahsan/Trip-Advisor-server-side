@@ -34,16 +34,6 @@ async function run() {
     const userCollection = client.db("tripAdvisorDB").collection("users");
 
     // users related api
-    app.post("/users", async (req, res) => {
-      const user = req.body;
-      const query = { email: user.email };
-      const existingUser = await userCollection.findOne(query);
-      if (existingUser) {
-        return res.send({ Message: "User already exist", insertedId: null });
-      }
-      const result = await userCollection.insertOne(user);
-      res.send(result);
-    });
 
     app.get("/users", async (req, res) => {
       const result = await userCollection.find().toArray();
@@ -54,6 +44,43 @@ async function run() {
       const email = req.params.email;
       const query = { email: email };
       const result = await userCollection.findOne(query);
+      res.send(result);
+    });
+
+    app.patch("/users/changeRole/:id", async (req, res) => {
+      const id = req.params.id;
+      const { role } = req.body;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: "Verified",
+          role,
+        },
+      };
+      const result = await userCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
+
+    app.patch("/users/requestToBeGuide/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) };
+      const updatedDoc = {
+        $set: {
+          status: "Requested",
+        },
+      };
+      const result = await userCollection.updateOne(filter, updatedDoc);
+      res.send(result);
+    });
+
+    app.post("/users", async (req, res) => {
+      const user = req.body;
+      const query = { email: user.email };
+      const existingUser = await userCollection.findOne(query);
+      if (existingUser) {
+        return res.send({ Message: "User already exist", insertedId: null });
+      }
+      const result = await userCollection.insertOne(user);
       res.send(result);
     });
 
