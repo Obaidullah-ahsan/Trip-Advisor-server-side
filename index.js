@@ -50,6 +50,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/users/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { email: email };
+      const result = await userCollection.findOne(query);
+      res.send(result);
+    });
+
     // pcckages related api
     app.get("/packages", async (req, res) => {
       const result = await packagesCollection.find().toArray();
