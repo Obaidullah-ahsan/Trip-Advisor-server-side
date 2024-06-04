@@ -32,6 +32,9 @@ async function run() {
     const guidesCollection = client.db("tripAdvisorDB").collection("guides");
     const reviewCollection = client.db("tripAdvisorDB").collection("reviews");
     const userCollection = client.db("tripAdvisorDB").collection("users");
+    const wishlistCollection = client
+      .db("tripAdvisorDB")
+      .collection("wishlist");
 
     // users related api
 
@@ -128,6 +131,13 @@ async function run() {
     app.post("/reviews", async (req, res) => {
       const review = req.body;
       const result = await reviewCollection.insertOne(review);
+      res.send(result);
+    });
+
+    // Wishlist related api
+    app.post("/wishlist", async (req, res) => {
+      const wishlist = req.body;
+      const result = await wishlistCollection.insertOne(wishlist);
       res.send(result);
     });
 
