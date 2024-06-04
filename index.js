@@ -37,9 +37,16 @@ async function run() {
       .collection("wishlist");
 
     // users related api
-
     app.get("/users", async (req, res) => {
-      const result = await userCollection.find().toArray();
+      const filter = req.query.filter;
+      const searchText = req.query.search;
+      let query = {};
+      if (filter) {
+        query = { role: filter };
+      }
+      console.log(searchText);
+      const cursor = userCollection.find(query);
+      const result = await cursor.toArray();
       res.send(result);
     });
 
