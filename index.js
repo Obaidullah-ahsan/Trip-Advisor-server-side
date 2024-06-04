@@ -39,14 +39,20 @@ async function run() {
     // users related api
     app.get("/users", async (req, res) => {
       const filter = req.query.filter;
-      const searchText = req.query.search;
-      let query = {};
+      const search = req.query.search;
+      let searchQuery = {
+        $or: [
+          { name: { $regex: search, $options: "i" } },
+          { email: { $regex: search, $options: "i" } },
+        ],
+      };
       if (filter) {
-        query = { role: filter };
+        searchQuery = {
+          ...searchQuery,
+          role: { $regex: filter, $options: "i" },
+        };
       }
-      console.log(searchText);
-      const cursor = userCollection.find(query);
-      const result = await cursor.toArray();
+      const result = await userCollection.find(searchQuery).toArray();
       res.send(result);
     });
 
