@@ -28,13 +28,13 @@ async function run() {
     const packagesCollection = client
       .db("tripAdvisorDB")
       .collection("packages");
-
     const guidesCollection = client.db("tripAdvisorDB").collection("guides");
     const reviewCollection = client.db("tripAdvisorDB").collection("reviews");
     const userCollection = client.db("tripAdvisorDB").collection("users");
     const wishlistCollection = client
       .db("tripAdvisorDB")
       .collection("wishlist");
+    const storyCollection = client.db("tripAdvisorDB").collection("story");
 
     // users related api
     app.get("/users", async (req, res) => {
@@ -166,6 +166,18 @@ async function run() {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await wishlistCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // Story related api
+    app.get("/story", async (req, res) => {
+      const result = await storyCollection.find().toArray();
+      res.send(result);
+    });
+
+    app.post("/story", async (req, res) => {
+      const storyItem = req.body;
+      const result = await storyCollection.insertOne(storyItem);
       res.send(result);
     });
 
