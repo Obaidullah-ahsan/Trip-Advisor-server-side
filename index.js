@@ -175,6 +175,13 @@ async function run() {
       res.send(result);
     });
 
+    app.get("/story/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await storyCollection.findOne(query)
+      res.send(result);
+    });
+
     app.post("/story", async (req, res) => {
       const storyItem = req.body;
       const result = await storyCollection.insertOne(storyItem);
