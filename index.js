@@ -120,6 +120,12 @@ async function run() {
       res.send(result);
     });
 
+    app.post("/packages", async (req, res) => {
+      const packageItem = req.body;
+      const result = await packagesCollection.insertOne(packageItem);
+      res.send(result);
+    });
+
     // guides related api
     app.get("/guides", async (req, res) => {
       const result = await guidesCollection.find().toArray();
