@@ -35,6 +35,7 @@ async function run() {
       .db("tripAdvisorDB")
       .collection("wishlist");
     const storyCollection = client.db("tripAdvisorDB").collection("story");
+    const bookingCollection = client.db("tripAdvisorDB").collection("bookings");
 
     // users related api
     app.get("/users", async (req, res) => {
@@ -100,7 +101,27 @@ async function run() {
       res.send(result);
     });
 
-    // pcckages related api
+    // Bookings related api
+    app.post("/bookings", async (req, res) => {
+      const bookingsItem = req.body;
+      const result = await bookingCollection.insertOne(bookingsItem);
+      res.send(result);
+    });
+
+    app.get("/bookings/:email", async (req, res) => {
+      const email = req.params.email;
+      const query = { tourist_email: email };
+      const result = await bookingCollection.find(query).toArray();
+      res.send(result);
+    });
+    app.delete("/deleteBookings/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await bookingCollection.deleteOne(query);
+      res.send(result);
+    });
+
+    // pckages related api
     app.get("/packages", async (req, res) => {
       const result = await packagesCollection.find().toArray();
       res.send(result);
@@ -109,7 +130,7 @@ async function run() {
     app.get("/packages/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
-      const result = await packagesCollection.find(query).toArray();
+      const result = await packagesCollection.findOne(query);
       res.send(result);
     });
 
